@@ -15,5 +15,10 @@ class Cities extends Model
         'lat',
         'lng'
     ];
-    protected $timestamps = false;
+    public $timestamps = false;
+
+    public function state()
+    {
+        return $this->belongsTo(States::class,'state_id');
+    }
 }

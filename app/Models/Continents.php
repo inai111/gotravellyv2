@@ -13,5 +13,10 @@ class Continents extends Model
         'name'
     ];
 
-    protected $timestamps = false;
+    public $timestamps = false;
+
+    public function countries()
+    {
+        return $this->hasMany(Countries::class,'continent_id');
+    }
 }

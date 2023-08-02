@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
+use App\Filters\V1\CountriesFilter;
+use App\Http\Controllers\Controller;
 use App\Models\Countries;
 use App\Http\Requests\StoreCountriesRequest;
 use App\Http\Requests\UpdateCountriesRequest;

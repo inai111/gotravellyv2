@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Controllers\Controller;
 use App\Models\States;
 use App\Http\Requests\StoreStatesRequest;
 use App\Http\Requests\UpdateStatesRequest;
