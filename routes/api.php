@@ -2,6 +2,10 @@
 
 use App\Http\Controllers\Api\V1\CustomerController;
 use App\Http\Controllers\Api\V1\InvoiceController;
+use App\Http\Controllers\Api\V1\CountryController;
+use App\Http\Controllers\Api\V1\ContinentsController;
+use App\Http\Controllers\Api\V1\CitiesController;
+use App\Http\Controllers\Api\V1\StatesController;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +36,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->prefix('v1')->group(function() {
     Route::apiResource('customers', CustomerController::class);
     Route::apiResource('invoices', InvoiceController::class);
+    Route::apiResource('continents', ContinentsController::class);
+    Route::apiResource('countries', CountryController::class);
+    Route::apiResource('states', StatesController::class);
+    Route::apiResource('cities', CitiesController::class);
 
     Route::post('invoices/bulk', [InvoiceController::class, 'bulkStore']);
 });
