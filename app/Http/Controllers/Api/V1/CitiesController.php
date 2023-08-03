@@ -2,19 +2,42 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Filters\V1\CitiesFilter;
 use App\Http\Controllers\Controller;
 use App\Models\Cities;
-use App\Http\Requests\StoreCitiesRequest;
-use App\Http\Requests\UpdateCitiesRequest;
+use App\Http\Requests\V1\StoreCitiesRequest;
+use App\Http\Requests\V1\UpdateCitiesRequest;
+use App\Http\Resources\V1\CityCollection;
+use App\Http\Resources\V1\CityResource;
+use Illuminate\Http\Request;
 
 class CitiesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+        $filter = new CitiesFilter();
+        $filteredRequest = $filter->transform($request);
+        
+        $cities = Cities::where($filteredRequest);
+        
+        /**
+         * menambahkan table lain dari @param include 
+         */
+        $include = $request->get('include');
+        $arr_include = explode(',',$include);
+        $arr_include = array_values(array_filter($arr_include,function($value){
+            return !empty($value);
+        }));
+
+        if(count($arr_include)>0){
+            $cities = $cities->with($arr_include);
+        }
+
+        return new CityCollection($cities->paginate()->appends($request->query()));
     }
 
     /**
@@ -31,30 +54,45 @@ class CitiesController extends Controller
     public function store(StoreCitiesRequest $request)
     {
         //
+        return new CityResource(Cities::create($request->all()));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Cities $cities)
+    public function show(Cities $city,Request $request)
     {
         //
+        $include = $request->get('include');
+        $arr_include = explode(',',$include);
+        $arr_include = array_values(array_filter($arr_include,function($value){
+            return !empty($value);
+        }));
+
+        if(count($arr_include)>0)
+        {
+            return new CityResource($city->loadMissing($arr_include));
+        }
+
+        return new CityResource($city);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Cities $cities)
+    public function edit(Cities $city)
     {
         //
     }
-
+    
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCitiesRequest $request, Cities $cities)
+    public function update(UpdateCitiesRequest $request, Cities $city)
     {
         //
+        # no content
+        return response($city->update($request->all()),204);
     }
 
     /**

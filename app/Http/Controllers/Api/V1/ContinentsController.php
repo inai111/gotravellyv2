@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Api\V1;
 use App\Filters\V1\ContinentsFilter;
 use App\Http\Controllers\Controller;
 use App\Models\Continents;
-use App\Http\Requests\StoreContinentsRequest;
-use App\Http\Requests\UpdateContinentsRequest;
+use App\Http\Requests\V1\StoreContinentsRequest;
+use App\Http\Requests\V1\UpdateContinentsRequest;
 use App\Http\Resources\V1\ContinentCollection;
 use App\Http\Resources\V1\ContinentsResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class ContinentsController extends Controller
 {
@@ -35,9 +36,12 @@ class ContinentsController extends Controller
          */
         $include = $request->get('include');
         $arr_include = explode(',',$include);
+        $arr_include = array_values(array_filter($arr_include,function($value){
+            return !empty($value);
+        }));
 
-        if(in_array('countries',$arr_include)){
-            $continent = $continent->with('countries');
+        if(count($arr_include)>0){
+            $continent = $continent->with($arr_include);
         }
 
         return new ContinentCollection($continent->paginate()->appends($request->query()));
@@ -57,6 +61,7 @@ class ContinentsController extends Controller
     public function store(StoreContinentsRequest $request)
     {
         //
+        return new ContinentsResource(Continents::create($request->all()));
     }
 
     /**
@@ -66,9 +71,13 @@ class ContinentsController extends Controller
     {
         $include = $request->get('include');
         $arr_include = explode(',',$include);
+        $arr_include = array_values(array_filter($arr_include,function($value){
+            return !empty($value);
+        }));
 
-        if(in_array('countries',$arr_include)){
-            return new ContinentsResource($continent->loadMissing('countries'));
+        if(count($arr_include)>0)
+        {
+            return new ContinentsResource($continent->loadMissing($arr_include));
         }
 
         return new ContinentsResource($continent);
@@ -77,17 +86,18 @@ class ContinentsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Continents $continents)
+    public function edit(Continents $continents,)
     {
         //
     }
-
+    
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateContinentsRequest $request, Continents $continents)
+    public function update(UpdateContinentsRequest $request, Continents $continent)
     {
-        //
+        // no content
+        return response($continent->update($request->all()),204);
     }
 
     /**
