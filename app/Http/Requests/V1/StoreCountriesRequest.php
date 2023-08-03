@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 
 class StoreCountriesRequest extends FormRequest
 {
@@ -11,7 +12,9 @@ class StoreCountriesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        return $user != null && $user->tokenCan('create');
     }
 
     /**
@@ -23,6 +26,22 @@ class StoreCountriesRequest extends FormRequest
     {
         return [
             //
+            'shortCode'=>['required','unique:countries,short_code'],
+            'name'=>['required'],
+            'timezone'=>[],
+            'phoneCode'=>[],
+            'continentId'=>['required','exists:continents,id']
         ];
+    }
+
+    protected function passedValidation(): void
+    {
+        $data = $this->validated();
+        $data['phone_code'] = $this->phoneCode?? null;
+        $data['short_code'] = $this->shortCode?? null;
+        $data['continent_id'] = $this->continentId?? null;
+        
+        $data = Arr::except($data,['continentId','phoneCode','shortCode']);
+        $this->replace($data);
     }
 }

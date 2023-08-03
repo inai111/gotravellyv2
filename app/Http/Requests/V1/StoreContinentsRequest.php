@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,9 @@ class StoreContinentsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        return $user != null && $user->tokenCan('create');
     }
 
     /**
@@ -22,7 +24,7 @@ class StoreContinentsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name'=>['required','unique:continents,name']
         ];
     }
 }

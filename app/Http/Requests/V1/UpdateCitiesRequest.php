@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
+use Illuminate\Validation\Rule;
 
 class UpdateCitiesRequest extends FormRequest
 {
@@ -11,7 +13,9 @@ class UpdateCitiesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        return $user != null && $user->tokenCan('update');
     }
 
     /**
@@ -21,8 +25,26 @@ class UpdateCitiesRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        $method = $this->method();
+
+        if($method=='PUT'){
+            return [
+                'name'=>['required'],
+                'lat'=>[],
+                'lng'=>[],
+            ];
+        }else{
+            return [
+                'name'=>['sometimes','required'],
+                'lat'=>[],
+                'lng'=>[],
+            ];
+        }
+    }
+
+    protected function passedValidation(): void
+    {
+        $data = $this->validated();
+        $this->replace($data);
     }
 }

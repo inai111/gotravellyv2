@@ -25,6 +25,27 @@ class CountryResource extends JsonResource
             ]
         ];
 
+        $include = collect();
+
+        #
+        $relationshipsStates = $this->whenLoaded('states',function(){
+            return $this->states->map(function($state){
+                return [
+                    'data'=>[
+                        'id'=>$state->id,
+                        'type'=>"states"
+                    ]
+                ];
+            });
+        },false);
+        if($relationshipsStates) {
+            $include = $include->merge(StateResource::collection($this->whenLoaded('states')));
+            $response['relationships']['states'] = $relationshipsStates;
+        }
+
+        #
+        if(!$include->isEmpty()) $response['included'] = $include;
+
         return $response;
     }
 }

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 
 class UpdateCountriesRequest extends FormRequest
 {
@@ -11,7 +12,9 @@ class UpdateCountriesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        return $user != null && $user->tokenCan('update');
     }
 
     /**
@@ -21,8 +24,33 @@ class UpdateCountriesRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        $method = $this->method();
+
+        if($method=='PUT'){
+            return [
+                'shortCode'=>['required'],
+                'name'=>['required'],
+                'timezone'=>[],
+                'phoneCode'=>[],
+            ];
+        }else{
+            return [
+                //
+                'shortCode'=>['sometimes','required'],
+                'name'=>['sometimes','required'],
+                'timezone'=>[],
+                'phoneCode'=>[],
+            ];
+        }
+    }
+
+    protected function passedValidation(): void
+    {
+        $data = $this->validated();
+        if(isset($data['phoneCode'])) $data['phone_code'] = $this->phoneCode;
+        if(isset($data['shortCode'])) $data['short_code'] = $this->shortCode;
+        
+        $data = Arr::except($data,['phoneCode','shortCode']);
+        $this->replace($data);
     }
 }

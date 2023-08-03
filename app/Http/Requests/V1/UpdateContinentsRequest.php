@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\V1;
 
+use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateContinentsRequest extends FormRequest
 {
@@ -11,7 +13,9 @@ class UpdateContinentsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        return $user != null && $user->tokenCan('update');
     }
 
     /**
@@ -19,10 +23,21 @@ class UpdateContinentsRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
+    // public function rules(): array
     public function rules(): array
     {
-        return [
-            //
-        ];
+        $id = $this->route('continent');
+        $method = $this->method();
+
+        if($method=='PUT'){
+            return [
+                'name'=>['required',Rule::unique('continents','name')->ignore($id)]
+            ];
+        }else{
+            return [
+                'name'=>['sometimes','required',Rule::unique('continents','name')->ignore($id)]
+            ];
+        }
+
     }
 }
