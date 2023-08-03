@@ -7,13 +7,14 @@ use App\Filters\ApiFilter;
 
 class ContinentsFilter extends ApiFilter {
     protected $safeParms = [
-        'name' => ['eq'],
+        'name' => ['eq','ne'],
     ];
 
     protected $columnMap = [];
 
     protected $operatorMap = [
         'eq' => '=',
+        'ne' => '!=',
         'lt' => '<',
         'lte' => '<=',
         'gt' => '>',

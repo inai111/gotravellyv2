@@ -7,8 +7,8 @@ use App\Filters\ApiFilter;
 
 class StatesFilter extends ApiFilter {
     protected $safeParms = [
-        'name' => ['eq'],
-        'countryId' => ['eq'],
+        'name' => ['eq','ne'],
+        'countryId' => ['eq','ne'],
     ];
 
     protected $columnMap = [
@@ -17,6 +17,7 @@ class StatesFilter extends ApiFilter {
 
     protected $operatorMap = [
         'eq' => '=',
+        'ne' => '!=',
         'lt' => '<',
         'lte' => '<=',
         'gt' => '>',

@@ -7,10 +7,10 @@ use App\Filters\ApiFilter;
 
 class CitiesFilter extends ApiFilter {
     protected $safeParms = [
-        'name' => ['eq'],
-        'stateId' => ['eq'],
-        'lat' => ['eq'],
-        'lng' => ['eq'],
+        'name' => ['eq','ne'],
+        'stateId' => ['eq','ne'],
+        'lat' => ['eq','ne'],
+        'lng' => ['eq','ne'],
     ];
 
     protected $columnMap = [
@@ -19,6 +19,7 @@ class CitiesFilter extends ApiFilter {
 
     protected $operatorMap = [
         'eq' => '=',
+        'ne' => '!=',
         'lt' => '<',
         'lte' => '<=',
         'gt' => '>',

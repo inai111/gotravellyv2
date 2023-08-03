@@ -7,11 +7,11 @@ use App\Filters\ApiFilter;
 
 class CountriesFilter extends ApiFilter {
     protected $safeParms = [
-        'shortCode' => ['eq'],
-        'name' => ['eq'],
-        'timezone' => ['eq'],
-        'phoneCode' => ['eq'],
-        'continentId' => ['eq'],
+        'shortCode' => ['eq','ne'],
+        'name' => ['eq','ne'],
+        'timezone' => ['eq','ne'],
+        'phoneCode' => ['eq','ne'],
+        'continentId' => ['eq','ne'],
     ];
 
     protected $columnMap = [
@@ -22,6 +22,7 @@ class CountriesFilter extends ApiFilter {
 
     protected $operatorMap = [
         'eq' => '=',
+        'ne' => '!=',
         'lt' => '<',
         'lte' => '<=',
         'gt' => '>',
