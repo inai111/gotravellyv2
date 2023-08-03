@@ -24,7 +24,8 @@ class Countries extends Model
         return $this->belongsTo(Continents::class,'continent_id');
     }
 
-    public function states(){
-        return $this->hasMany(States::class,'state_id');
+    public function states()
+    {
+        return $this->hasMany(States::class,'country_id');
     }
 }

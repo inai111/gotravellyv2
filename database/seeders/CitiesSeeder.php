@@ -17,6 +17,6 @@ class CitiesSeeder extends Seeder
         $json = File::get(database_path('seeders/JSON/cities.json'));
         $data = json_decode($json,true);
         
-        DB::table('continents')->insert($data);
+        DB::table('cities')->insert($data);
     }
 }

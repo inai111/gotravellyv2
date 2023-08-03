@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 
 class StoreStatesRequest extends FormRequest
 {
@@ -11,7 +12,9 @@ class StoreStatesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        return $user != null && $user->tokenCan('create');
     }
 
     /**
@@ -23,6 +26,16 @@ class StoreStatesRequest extends FormRequest
     {
         return [
             //
+            'name'=>['required'],
+            'countryId'=>['required','exists:countries,id']
         ];
+    }
+
+    protected function passedValidation(): void
+    {
+        $data = $this->validated();
+        $data['country_id'] = $this->countryId??null;
+        $data = Arr::except($data,['countryId']);
+        $this->replace($data);
     }
 }
