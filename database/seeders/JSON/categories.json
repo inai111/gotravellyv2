@@ -1,0 +1,82 @@
+[
+    {
+        "name": "Beach Exploring",
+        "active": "1",
+        "priority_order": "1"
+    },
+    {
+        "name": "Hiking & Trekking",
+        "active": "1",
+        "priority_order": "1"
+    },
+    {
+        "name": "Music \/ Concerts",
+        "active": "1",
+        "priority_order": "1"
+    },
+    {
+        "name": "Snorkling",
+        "active": "1",
+        "priority_order": "1"
+    },
+    {
+        "name": "Diving",
+        "active": "1",
+        "priority_order": "1"
+    },
+    {
+        "name": "WaterSport \/ Cruises \/ Sailing",
+        "active": "1",
+        "priority_order": "1"
+    },
+    {
+        "name": "Culture & Art",
+        "active": "1",
+        "priority_order": "1"
+    },
+    {
+        "name": "Attraction",
+        "active": "1",
+        "priority_order": "1"
+    },
+    {
+        "name": "Theme Park",
+        "active": "1",
+        "priority_order": "1"
+    },
+    {
+        "name": "Wine & Nightlife",
+        "active": "1",
+        "priority_order": "1"
+    },
+    {
+        "name": "Waterfall",
+        "active": "1",
+        "priority_order": "1"
+    },
+    {
+        "name": "Shopping",
+        "active": "1",
+        "priority_order": "1"
+    },
+    {
+        "name": "Cave Exploring",
+        "active": "1",
+        "priority_order": "1"
+    },
+    {
+        "name": "City Trip",
+        "active": "1",
+        "priority_order": "1"
+    },
+    {
+        "name": "Historical Places",
+        "active": "1",
+        "priority_order": "1"
+    },
+    {
+        "name": "Rafting",
+        "active": "1",
+        "priority_order": "1"
+    }
+]

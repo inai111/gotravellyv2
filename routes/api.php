@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\CountriesController;
 use App\Http\Controllers\Api\V1\ContinentsController;
 use App\Http\Controllers\Api\V1\CitiesController;
 use App\Http\Controllers\Api\V1\StatesController;
+use App\Http\Controllers\Api\V1\CategoriesController;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function() {
     Route::apiResource('countries', CountriesController::class);
     Route::apiResource('states', StatesController::class);
     Route::apiResource('cities', CitiesController::class);
+    Route::apiResource('categories', CategoriesController::class);
 
     Route::post('invoices/bulk', [InvoiceController::class, 'bulkStore']);
 });
