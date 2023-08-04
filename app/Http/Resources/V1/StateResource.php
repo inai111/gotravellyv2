@@ -26,6 +26,20 @@ class StateResource extends JsonResource
         $include = collect();
 
         #
+        $countriesRelationships = $this->whenLoaded('countries',function(){
+            return [
+                'data'=>[
+                    'id'=>$this->countries->id,
+                    'type'=>'countries'
+                ]
+            ];
+        },false);
+        if($countriesRelationships){
+            $include = $include->merge(CountryResource::collection([$this->whenLoaded('countries')]));
+            $response['relationships']['countries'] = $countriesRelationships;
+        }
+
+        #
         $citiesRelationships = $this->whenLoaded('cities',function(){
             return $this->cities->map(function($city){
                 return [

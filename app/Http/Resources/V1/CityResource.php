@@ -27,8 +27,23 @@ class CityResource extends JsonResource
         #
         $include = collect();
 
+        $relationshipsStates = $this->whenLoaded('states',function(){
+            # State singular
+            return [
+                'data'=>[
+                    'id'=>$this->states->id,
+                    'type'=>"States"
+                ]
+            ];
+        },false);
+        if($relationshipsStates) {
+            $include = $include->merge(new StateResource($this->whenLoaded('states')));
+            $response['relationships']['states'] = $relationshipsStates;
+        }
+
         #
-        if($include->isEmpty()) $response['included'] = $include;
+        if(!$include->isEmpty()) $response['included'] = $include;
+
 
         return $response;
     }

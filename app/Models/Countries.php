@@ -19,7 +19,7 @@ class Countries extends Model
     ];
     public $timestamps = false;
 
-    public function continent()
+    public function continents()
     {
         return $this->belongsTo(Continents::class,'continent_id');
     }

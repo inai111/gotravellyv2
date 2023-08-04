@@ -27,8 +27,23 @@ class CountryResource extends JsonResource
 
         $include = collect();
 
+        $relationshipsContinents = $this->whenLoaded('continents',function(){
+            # continent singular
+            return [
+                'data'=>[
+                    'id'=>$this->continents->id,
+                    'type'=>"continents"
+                ]
+            ];
+        },false);
+        if($relationshipsContinents) {
+            $include = $include->merge(ContinentsResource::collection([$this->whenLoaded('continents')]));
+            $response['relationships']['continents'] = $relationshipsContinents;
+        }
+        
         #
         $relationshipsStates = $this->whenLoaded('states',function(){
+            # states plural
             return $this->states->map(function($state){
                 return [
                     'data'=>[

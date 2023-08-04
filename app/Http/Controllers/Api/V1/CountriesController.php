@@ -24,12 +24,11 @@ class CountriesController extends Controller
         
         $countries = Countries::where($filteredRequest);
         
-        /**
-         * menambahkan table lain dari @param include 
-         */
+        # mendapatkan param include
         $include = $request->get('include');
         $arr_include = explode(',',$include);
         $arr_include = array_values(array_filter($arr_include,function($value){
+            # hilangkan value null, karena bikin error
             return !empty($value);
         }));
 

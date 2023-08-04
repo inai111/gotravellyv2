@@ -17,7 +17,7 @@ class Cities extends Model
     ];
     public $timestamps = false;
 
-    public function state()
+    public function states()
     {
         return $this->belongsTo(States::class,'state_id');
     }
