@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Filters\V1\ContinentsFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\BulkStoreContinentsRequest;
 use App\Models\Continents;
 use App\Http\Requests\V1\StoreContinentsRequest;
 use App\Http\Requests\V1\UpdateContinentsRequest;
@@ -62,6 +63,21 @@ class ContinentsController extends Controller
     {
         //
         return new ContinentsResource(Continents::create($request->all()));
+    }
+
+    /**
+     * store a multiple resource in storage
+     */
+    public function storebulk(BulkStoreContinentsRequest $request)
+    {
+        if(Continents::insert($request->all()))
+        {
+            $message = "INSERT_BULK_OK";
+            return response()->json(['message'=>$message],201);
+        }
+
+        $message = "INSERT_BULK_ERR";
+        return response()->json(['message'=>$message],500);
     }
 
     /**

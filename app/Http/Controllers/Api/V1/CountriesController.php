@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Filters\V1\CountriesFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\BulkStoreCountriesRequest;
 use App\Models\Countries;
 use App\Http\Requests\V1\StoreCountriesRequest;
 use App\Http\Requests\V1\UpdateCountriesRequest;
@@ -92,6 +93,21 @@ class CountriesController extends Controller
     {
         // no content
         return response($country->update($request->all()),204);
+    }
+
+    /**
+     * store a multiple resource in storage
+     */
+    public function storeBulk(BulkStoreCountriesRequest $request)
+    {
+        if(Countries::insert($request->all()))
+        {
+            $message = 'INSERT_BULK_OK';
+            return response()->json(['message'=>$message],201);
+        }
+        
+        $message = 'INSERT_BULK_ERR';
+        return response()->json(['message'=>$message],500);
     }
 
     /**

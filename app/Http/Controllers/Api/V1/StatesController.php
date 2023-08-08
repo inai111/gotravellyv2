@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Filters\V1\StatesFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\BulkStoreStatesRequest;
 use App\Models\States;
 use App\Http\Requests\V1\StoreStatesRequest;
 use App\Http\Requests\V1\UpdateStatesRequest;
@@ -54,6 +55,21 @@ class StatesController extends Controller
     public function store(StoreStatesRequest $request)
     {
         return new StateResource(States::create($request->all()));
+    }
+
+    /**
+     * store a multiple resource in storage
+     */
+    public function storebulk(BulkStoreStatesRequest $request)
+    {
+        if(States::insert($request->all()))
+        {
+            $message = "INSERT_BULK_OK";
+            return response()->json(['message'=>$message],201);
+        }
+
+        $message = "INSERT_BULK_ERR";
+        return response()->json(['message'=>$message],500);
     }
 
     /**
