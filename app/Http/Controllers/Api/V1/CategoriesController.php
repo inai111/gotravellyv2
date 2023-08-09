@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Filters\V1\CategoriesFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\BulkStoreCategoriesRequest;
 use App\Models\Categories;
 use App\Http\Requests\V1\StoreCategoriesRequest;
 use App\Http\Requests\V1\UpdateCategoriesRequest;
@@ -24,7 +25,7 @@ class CategoriesController extends Controller
 
         $categories = Categories::where($filteredRequest);
 
-        return new CategoryCollection($categories->paginate()->appends($request->all()));
+        return new CategoryCollection($categories->paginate()->appends($request->query()));
     }
 
     /**
@@ -42,6 +43,21 @@ class CategoriesController extends Controller
     {
         //
         return new CategoryResource(Categories::create($request->all()));
+    }
+
+    /**
+     * strore a multiple resource in storage
+     */
+    public function storebulk(BulkStoreCategoriesRequest $request)
+    {
+        if(Categories::insert($request->all()))
+        {
+            $message = "INSERT_BULK_OK";
+            return response()->json(['message'=>$message],201);
+        }
+
+        $message = "INSERT_BULK_ERR";
+        return response()->json(['message'=>$message],500);
     }
 
     /**

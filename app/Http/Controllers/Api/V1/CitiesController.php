@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Filters\V1\CitiesFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\BulkStoreCitiesRequest;
 use App\Models\Cities;
 use App\Http\Requests\V1\StoreCitiesRequest;
 use App\Http\Requests\V1\UpdateCitiesRequest;
@@ -55,6 +56,21 @@ class CitiesController extends Controller
     {
         //
         return new CityResource(Cities::create($request->all()));
+    }
+
+    /**
+     * store a multiple resource in storage
+     */
+    public function storebulk(BulkStoreCitiesRequest $request)
+    {
+        if(Cities::insert($request->all()))
+        {
+            $message = "INSERT_BULK_OK";
+            return response()->json(['message'=>$message],201);
+        }
+
+        $message = "INSERT_BULK_ERR";
+        return response()->json(['message'=>$message],500);
     }
 
     /**
