@@ -106,14 +106,16 @@ class StatesController extends Controller
     public function update(UpdateStatesRequest $request, States $state)
     {
         //
-        return response($state->update($request->all()),204);
+        $state->update($request->all());
+        return new StateResource($state);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(States $states)
+    public function destroy(States $state)
     {
-        //
+        $state->delete();
+        return response('',204);
     }
 }

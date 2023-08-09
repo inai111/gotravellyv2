@@ -89,8 +89,10 @@ class CategoriesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Categories $categories)
+    public function destroy(Categories $category)
     {
         //
+        $category->delete();
+        return response('',204);
     }
 }

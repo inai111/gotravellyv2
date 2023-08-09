@@ -35,7 +35,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // });
 
 Route::middleware('auth:sanctum')->prefix('v1')->group(function() {
-    Route::apiResource('customers', CustomerController::class)->middleware('add-etag');
+    Route::apiResource('customers', CustomerController::class);
     Route::apiResource('invoices', InvoiceController::class);
     Route::apiResource('continents', ContinentsController::class);
     Route::apiResource('countries', CountriesController::class);
@@ -49,4 +49,4 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function() {
     Route::post('states/bulk', [StatesController::class,'storebulk']);
     Route::post('cities/bulk', [CitiesController::class,'storebulk']);
     Route::post('categories/bulk', [CategoriesController::class,'storebulk']);
-});
+})->middleware('add-etag');

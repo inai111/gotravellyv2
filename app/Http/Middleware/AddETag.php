@@ -18,6 +18,9 @@ class AddETag
         # mendapatkan request ke dalam bentuk Response
         $response = $next($request);
         
+        # hanya get yang akan return 304 atau new etag
+        if($request->getMethod()!=="GET") return $response;
+        
         # mendapatkan isi response dan membuat etag menggunakan md5
         $etag = md5($request->getContent());
         $response->header('ETag',$etag);

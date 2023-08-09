@@ -113,8 +113,9 @@ class CountriesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Countries $countries)
+    public function destroy(Countries $country)
     {
-        //
+        $country->delete();
+        return response('',204);
     }
 }

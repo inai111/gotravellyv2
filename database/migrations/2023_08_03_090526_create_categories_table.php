@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->enum('active',[0,1])->default(0);
             $table->integer('priority_order')->default(2);
+            $table->softDeletesTz();
+
+            #index
             $table->fullText('name');
         });
     }

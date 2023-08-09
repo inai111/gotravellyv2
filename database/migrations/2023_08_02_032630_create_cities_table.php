@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('countries', function (Blueprint $table) {
+        Schema::create('cities', function (Blueprint $table) {
             $table->id();
-            $table->string('short_code')->nullable();
             $table->string('name');
-            $table->string('timezone')->nullable();
-            $table->string('phone_code')->nullable();
-            $table->foreignId('continent_id')
+            $table->foreignId('state_id')
             ->constrained()
-            ->onDelete('cascade')
-            ->onUpdate('cascade');
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->string('lat')->nullable();
+            $table->string('lng')->nullable();
             $table->softDeletesTz();
 
             #index
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('countries');
+        Schema::dropIfExists('cities');
     }
 };

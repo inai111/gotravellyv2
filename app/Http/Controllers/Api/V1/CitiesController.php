@@ -114,8 +114,9 @@ class CitiesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Cities $cities)
+    public function destroy(Cities $city)
     {
-        //
+        $city->delete();
+        return response('',204);
     }
 }

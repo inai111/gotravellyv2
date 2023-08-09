@@ -119,8 +119,9 @@ class ContinentsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Continents $continents)
+    public function destroy(Continents $continent)
     {
-        //
+        $continent->delete();
+        return response('',204);
     }
 }
