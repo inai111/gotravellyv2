@@ -14,17 +14,42 @@ class CustomerResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        //return parent::toArray($request);
-        return [
+        $response = [
             'id' => $this->id,
-            'name' => $this->name,
-            'type' => $this->type,
-            'email' => $this->email,
-            'address' => $this->address,
-            'city' => $this->city,
-            'state' => $this->state,
-            'postalCode' => $this->postal_code,
-            'invoices' => InvoiceResource::collection($this->whenLoaded('invoices'))
+            'entity' => "customers",
+            'attributes' => [
+                'name' => $this->name,
+                'type' => $this->type,
+                'email' => $this->email,
+                'address' => $this->address,
+                'city' => $this->city,
+                'state' => $this->state,
+                'postalCode' => $this->postal_code,
+            ],
         ];
+
+        $include = collect();
+
+        #
+        $relationshipsInvoices = $this->whenLoaded('invoices',function(){
+            # invoices plural
+            return $this->invoices->map(function($invoice){
+                return [
+                    'data'=>[
+                        'id'=>$invoice->id,
+                        'entity'=>"invoices"
+                    ]
+                ];
+            });
+        },false);
+        if($relationshipsInvoices) {
+            $include = $include->merge(InvoiceResource::collection($this->whenLoaded('invoices')));
+            $response['relationships']['invoices'] = $relationshipsInvoices;
+        }
+
+        #
+        if(!$include->isEmpty()) $response['included'] = $include;
+
+        return $response;
     }
 }

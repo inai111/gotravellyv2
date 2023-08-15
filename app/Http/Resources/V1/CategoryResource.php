@@ -16,7 +16,7 @@ class CategoryResource extends JsonResource
     {
         $response = [
             'id'=>$this->id,
-            'type'=>'categories',
+            'entity'=>'categories',
             'attributes'=>[
                 'name'=>$this->name,
                 'active'=>$this->active,

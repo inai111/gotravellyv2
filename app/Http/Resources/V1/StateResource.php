@@ -16,7 +16,7 @@ class StateResource extends JsonResource
     {
         $response = [
             'id'=>$this->id,
-            'type'=>'states',
+            'entity'=>'states',
             'attributes'=>[
                 'name'=>$this->name,
             ]
@@ -30,7 +30,7 @@ class StateResource extends JsonResource
             return [
                 'data'=>[
                     'id'=>$this->countries->id,
-                    'type'=>'countries'
+                    'entity'=>'countries'
                 ]
             ];
         },false);
@@ -45,7 +45,7 @@ class StateResource extends JsonResource
                 return [
                     'data'=>[
                         'id'=>$city->id,
-                        'type'=>'cities'
+                        'entity'=>'cities'
                     ]
                 ];
             });

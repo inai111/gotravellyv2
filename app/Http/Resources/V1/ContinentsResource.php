@@ -18,7 +18,7 @@ class ContinentsResource extends JsonResource
     {
         $response = [
             'id'=>$this->id,
-            'type'=>'continents',
+            'entity'=>'continents',
             'attributes'=>[
                 'name'=>$this->name
             ]
@@ -33,7 +33,7 @@ class ContinentsResource extends JsonResource
                 return [
                     'data'=>[
                         'id'=>$country->id,
-                        'type'=>'countries'
+                        'entity'=>'countries'
                     ]
                 ];
             });

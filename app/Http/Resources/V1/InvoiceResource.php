@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\V1;
 
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,14 +15,37 @@ class InvoiceResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        //return parent::toArray($request);
-        return [
+        $response = [
             'id' => $this->id,
-            'customerId' => $this->customer_id,
-            'amount' => $this->amount,
-            'status' => $this->status,
-            'billedDate' => $this->billed_date,
-            'paidDate' => $this->paid_date
+            'entity' => "invoices",
+            'attributes' => [
+                'customerId' => $this->customer_id,
+                'amount' => $this->amount,
+                'status' => $this->status,
+                'billedDate' => $this->billed_date,
+                'paidDate' => $this->paid_date
+            ],
         ];
+
+        $include = collect();
+
+        $relationshipsCustomers = $this->whenLoaded('customers',function(){
+            # customer singular
+            return [
+                'data'=>[
+                    'id'=>$this->customert->id,
+                    'entity'=>"customers"
+                ]
+            ];
+        },false);
+        if($relationshipsCustomers) {
+            $include = $include->merge(CustomerResource::collection([$this->whenLoaded('customers')]));
+            $response['relationships']['customers'] = $relationshipsCustomers;
+        }
+
+        #
+        if(!$include->isEmpty()) $response['included'] = $include;
+
+        return $response;
     }
 }

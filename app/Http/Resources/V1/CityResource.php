@@ -16,7 +16,7 @@ class CityResource extends JsonResource
     {
         $response = [
             'id'=>$this->id,
-            'type'=>'cities',
+            'entity'=>'cities',
             'attributes'=>[
                 'name'=>$this->name,
                 'lat'=>$this->lat,
@@ -32,7 +32,7 @@ class CityResource extends JsonResource
             return [
                 'data'=>[
                     'id'=>$this->states->id,
-                    'type'=>"States"
+                    'entity'=>"States"
                 ]
             ];
         },false);
