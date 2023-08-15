@@ -60,8 +60,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function() {
     Route::post('states/bulk', [StatesController::class,'storebulk']);
     Route::post('cities/bulk', [CitiesController::class,'storebulk'])->name('api.cities.bulk');
     Route::post('categories/bulk', [CategoriesController::class,'storebulk']);
-    // })->middleware('add-etag');
-});
+})->middleware('add-etag');
 
 Route::prefix('v1')->group(function() {
     Route::post('login', [AuthController::class, 'index'])->name('v1.login');

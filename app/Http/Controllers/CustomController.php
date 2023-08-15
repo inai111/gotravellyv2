@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Auth;
-use Http;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redis;
 
 class CustomController extends Controller
@@ -17,7 +19,7 @@ class CustomController extends Controller
     {
         # buat key redis dari url request
         $keyRedis = md5($url);
-        $token = '7x0lHIA0ozP8S2J7FV7yOIXE72Iqw6LUExRP3Jjd';
+        $token = session()->get('authToken');
         $etag = '';
 
         if (Redis::cekKoneksiServer()) {
@@ -52,8 +54,6 @@ class CustomController extends Controller
             $data = $getData->json();
         } else if ($getData->status() === 304) {
             $data = json_decode(Redis::get($etag), true);
-        } else if ($getData->badRequest()) {
-            return $data;
         }
         return $data;
     }
@@ -62,7 +62,7 @@ class CustomController extends Controller
      * function untuk melakukan request POST
      * @param String $url url lengkap dari api, post tidak memiliki parameter
      * @param Array $data isi dari form yang akan di kirimkan ke api
-     * @return Http setting kembalian melalui controller masing masing
+     * @return Object setting kembalian melalui controller masing masing
      */
     protected function requestPost(string $url,array $data)
     {
@@ -76,4 +76,24 @@ class CustomController extends Controller
 
         return $getData;
     } 
+
+    /**
+     * @param Array $response kembalian dari request getAll yang isinya [data=>[], meta=>[], links=>[]]
+     * @param Request $request
+     * @return LengthAwarePaginator
+     */
+    protected function paginate($response, Request $request)
+    {
+        $page = $request->get('page')??1;
+        return new LengthAwarePaginator(
+            $response['data'],
+            $response['meta']['total'],
+            $response['meta']['per_page'],
+            $page,
+            [
+                "path"=>url()->current(),
+                'query'=>$request->query()
+            ]
+        );
+    }
 }

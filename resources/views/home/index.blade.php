@@ -17,13 +17,13 @@
                                 Filters
                             </button>
                         </div>
-                        <div class="collapse my-2" id="collapseExample">
+                        <div class="collapse my-2 @isset(request('filter')['stateId']) show @endisset" id="collapseExample">
                             <div class="row">
                                 <div class="col-3">
                                     <select class="form-select" name="filter[stateId]" aria-label="Default select example">
                                         <option selected>Pilih by Provinsi</option>
-                                        @foreach ($states as $state)
-                                            <option value="{{$state['id']}}">{{$state['attributes']['name']}}</option>
+                                        @foreach ($dataStates as $state)
+                                            <option value="{{$state['id']}}" @selected((int)request('filter')['stateId']===$state['id'])>{{$state['attributes']['name']}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -47,7 +47,7 @@
             @endforeach
         </div>
         <div>
-            {{ $cities->links() }}
+            {{ $dataCities->links() }}
         </div>
     </div>
 @endsection

@@ -5,14 +5,15 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthLoginRequest;
 use App\Traits\HttpResponse;
-use Auth;
-use Illuminate\Http\Request;
-use Validator;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     use HttpResponse;
 
+    /**
+     * @param Object $user
+     */
     public function index(AuthLoginRequest $request)
     {
         if(!Auth::attempt($request->all())){

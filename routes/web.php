@@ -2,6 +2,7 @@
 
 use App\Exports\CategoriesExport;
 use App\Exports\CitiesExport;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CobaController;
 use App\Http\Resources\V1\CityCollection;
 use App\Models\Categories;
@@ -23,12 +24,21 @@ use Maatwebsite\Excel\Facades\Excel;
 |
 */
 
-Route::get('/',[CobaController::class,'index']);
+Route::get('/',[CobaController::class,'index'])->name('user');
+
+Route::group(['prefix'=>'login'],function(){
+    Route::get('/',[AuthController::class,'index'])->name('login');
+    Route::post('/',[AuthController::class,'login']);
+});
 
 Route::delete('/excel', function (Request $request) {
     // return view('exports.cities',['data'=>new CityCollection(Cities::all())]);
     return Excel::download(new CitiesExport,'invoices.xlsx',\Maatwebsite\Excel\Excel::XLSX, ['X-Vapor-Base64-Encode' => 'True']);
 });
+
+// Route::middleware('javascript-allowed')->group(['prefix'=>'collections'],function(){
+//     Route::get('/cities',[CollectionController::class,'getcities']);
+// })
 
 Route::get('/setup', function() {
     $credentials = [
