@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\ContinentsController;
 use App\Http\Controllers\Api\V1\CitiesController;
 use App\Http\Controllers\Api\V1\StatesController;
 use App\Http\Controllers\Api\V1\CategoriesController;
+use App\Http\Controllers\Api\V1\AuthController;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -59,4 +60,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function() {
     Route::post('states/bulk', [StatesController::class,'storebulk']);
     Route::post('cities/bulk', [CitiesController::class,'storebulk'])->name('api.cities.bulk');
     Route::post('categories/bulk', [CategoriesController::class,'storebulk']);
-})->middleware('add-etag');
+    // })->middleware('add-etag');
+});
+
+Route::prefix('v1')->group(function() {
+    Route::post('login', [AuthController::class, 'index'])->name('v1.login');
+});
