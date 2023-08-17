@@ -45,7 +45,9 @@
                     $desc = 'asdasd';
                 @endphp
                 <div class="col-4 mb-2">
-                    <x-card-cities :$name :$desc />
+                    <x-card-cities :$name :$desc >
+                        <a href="/cities/{{$city['id']}}" class="btn btn-sm btn-success">Kunjungi</a>
+                    </x-card-cities>
                 </div>
             @endforeach
         </div>

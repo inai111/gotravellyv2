@@ -37,7 +37,7 @@ class CityResource extends JsonResource
             ];
         },false);
         if($relationshipsStates) {
-            $include = $include->merge(new StateResource($this->whenLoaded('states')));
+            $include = $include->merge(StateResource::collection([$this->whenLoaded('states')]));
             $response['relationships']['states'] = $relationshipsStates;
         }
 
