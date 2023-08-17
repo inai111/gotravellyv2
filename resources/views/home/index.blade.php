@@ -8,7 +8,8 @@
                     <div>
                         <div class="w-75 mx-auto d-flex align-items-end gap-2">
                             <div class="d-flex flex-fill">
-                                <input class="form-control me-2" name="filter[name]" type="search" placeholder="Search" aria-label="Search">
+                                <input class="form-control me-2" value="{{ request('filter.name') }}" name="filter[name]"
+                                    type="search" placeholder="Search" aria-label="Search">
                                 <button class="btn btn-outline-success" type="submit">Search</button>
                             </div>
                             <button type="button" style="font-size:12px" data-bs-toggle="collapse"
@@ -20,10 +21,12 @@
                         <div class="collapse my-2 @isset(request('filter')['stateId']) show @endisset" id="collapseExample">
                             <div class="row">
                                 <div class="col-3">
-                                    <select class="form-select" name="filter[stateId]" aria-label="Default select example">
-                                        <option selected>Pilih by Provinsi</option>
-                                        @foreach ($dataStates as $state)
-                                            <option value="{{$state['id']}}" @selected((int)request('filter')['stateId']===$state['id'])>{{$state['attributes']['name']}}</option>
+                                    <select class="form-select" name="filter[stateId]"
+                                        aria-label="Default select example">
+                                        <option selected disabled>Pilih by Provinsi</option>
+                                        @foreach ($dataStates->items() as $state)
+                                            <option value="{{ $state['id'] }}" @selected((int) request('filter.stateId') === $state['id'])>
+                                                {{ $state['attributes']['name'] }}</option>
                                         @endforeach
                                     </select>
                                 </div>

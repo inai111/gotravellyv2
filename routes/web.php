@@ -4,6 +4,7 @@ use App\Exports\CategoriesExport;
 use App\Exports\CitiesExport;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CobaController;
+use App\Http\Controllers\CollectionController;
 use App\Http\Resources\V1\CityCollection;
 use App\Models\Categories;
 use App\Models\Cities;
@@ -25,6 +26,7 @@ use Maatwebsite\Excel\Facades\Excel;
 */
 
 Route::get('/',[CobaController::class,'index'])->name('user');
+Route::get('/cities/{id}',[CobaController::class,'detailcity']);
 
 Route::group(['prefix'=>'login'],function(){
     Route::get('/',[AuthController::class,'index'])->name('login');
@@ -36,9 +38,11 @@ Route::delete('/excel', function (Request $request) {
     return Excel::download(new CitiesExport,'invoices.xlsx',\Maatwebsite\Excel\Excel::XLSX, ['X-Vapor-Base64-Encode' => 'True']);
 });
 
-// Route::middleware('javascript-allowed')->group(['prefix'=>'collections'],function(){
-//     Route::get('/cities',[CollectionController::class,'getcities']);
-// })
+// Route::middleware('javascript-allowed')->prefix('collections')->group(function(){
+Route::prefix('collections')->group(function(){
+    Route::get('/states',[CollectionController::class,'getstates']);
+    Route::get('/continents',[CollectionController::class,'getcontinents']);
+});
 
 Route::get('/setup', function() {
     $credentials = [

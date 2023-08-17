@@ -10,12 +10,12 @@
                     <label for="email">Email</label>
                     <input type="text" name="email" value="{{ old('email', '') }}" class="form-control @error('email') is-invalid @enderror"
                         required>
-                    <div class="invalid-feedback">{{ $errors->first('email') }}</div>
+                    <div class="invalid-feedback">{{ $errors->first('email')??"Please fill the required form" }}</div>
                 </div>
                 <div class="mb-3">
                     <label for="password">Password</label>
                     <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
-                    <div class="invalid-feedback">{{ $errors->first('password') }}</div>
+                    <div class="invalid-feedback">{{ $errors->first('password')??"Please fill the required form"}}</div>
                 </div>
                 <div class="mb-3">
                     <button type="submit" class="btn btn-primary">Submit</button>
