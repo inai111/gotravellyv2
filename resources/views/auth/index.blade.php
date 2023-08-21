@@ -20,6 +20,7 @@
                 <div class="mb-3">
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
+                <a href="/register">Register new user</a>
             </form>
         </div>
     </div>

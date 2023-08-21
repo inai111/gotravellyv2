@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthLoginRequest;
+use App\Http\Requests\AuthRegisterRequest;
 
 class AuthController extends CustomController
 {
@@ -30,5 +31,17 @@ class AuthController extends CustomController
             $request->session()->put('user',$data['data']);
             return redirect(route('user'));
         }
+    }
+
+    public function register()
+    {
+        return view('auth.register');
+    }
+
+    public function registering(AuthRegisterRequest $request)
+    {
+        $url = url(route('v1.user.store'));
+        $response = $this->requestPost($url,$request->all());
+        dd($response);
     }
 }

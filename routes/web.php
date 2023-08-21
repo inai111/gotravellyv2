@@ -32,6 +32,10 @@ Route::group(['prefix'=>'login'],function(){
     Route::get('/',[AuthController::class,'index'])->name('login');
     Route::post('/',[AuthController::class,'login']);
 });
+Route::group(['prefix'=>'register'],function(){
+    Route::get('/',[AuthController::class,'register']);
+    Route::post('/',[AuthController::class,'registering']);
+});
 
 Route::delete('/excel', function (Request $request) {
     // return view('exports.cities',['data'=>new CityCollection(Cities::all())]);
