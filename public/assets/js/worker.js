@@ -1,14 +1,22 @@
+let controller = new AbortController();
+
 self.addEventListener('message',message=>{
     let data = message.data;
     let headers = data.headers;
     headers['X-Requested-With']="Fetch";
+    
+    // abort existing request 
+    controller.abort();
+    controller = new AbortController();
 
     let response = {
-        url:data.url
+        url:data.url,
+        dataType:data.dataType
     };
 
     fetch(data.url,{
-        headers:headers
+        headers:headers,
+        signal:controller.signal
     })
     .then(data=>{
         response['statusCode']=data.status;

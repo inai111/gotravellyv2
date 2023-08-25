@@ -18,16 +18,42 @@
                                 Filters
                             </button>
                         </div>
-                        <div class="collapse my-2 @isset(request('filter')['stateId']) show @endisset" id="collapseExample">
+                        <div class="collapse my-2 @if(request('filter')) show @endif" id="collapseExample">
                             <div class="row">
                                 <div class="col-3">
-                                    <select class="form-select" name="filter[stateId]"
+                                    <select class="form-select" name="filter[continentId]"
+                                        aria-label="Default select example">
+                                        <option selected disabled>Pilih by Continent</option>
+                                        @foreach ($dataContinents as $continent)
+                                            <option value="{{ $continent['id'] }}" @selected((int) request('filter.continentId') === $continent['id'])>
+                                                {{ $continent['attributes']['name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-3">
+                                    <select class="form-select" name="filter[countryId]" @empty($dataOption['countries'])
+                                    disabled
+                                    @endempty
+                                        aria-label="Default select example">
+                                        <option selected disabled>Pilih by Country</option>
+                                        @isset($dataOption['countries'])
+                                        @foreach ($dataOption['countries'] as $country)
+                                            <option value="{{ $country['id'] }}" @selected((int) request('filter.countryId') === $country['id'])>
+                                                {{ $country['name'] }}</option>
+                                        @endforeach
+                                        @endisset
+                                    </select>
+                                </div>
+                                <div class="col-3">
+                                    <select class="form-select" name="filter[stateId]" @empty($dataOption['states']) disabled @endempty
                                         aria-label="Default select example">
                                         <option selected disabled>Pilih by Provinsi</option>
-                                        @foreach ($dataStates->items() as $state)
-                                            <option value="{{ $state['id'] }}" @selected((int) request('filter.stateId') === $state['id'])>
-                                                {{ $state['attributes']['name'] }}</option>
-                                        @endforeach
+                                        @isset($dataOption['states'])
+                                            @foreach ($dataOption['states'] as $state)
+                                                <option value="{{ $state['id'] }}" @selected((int) request('filter.stateId') === $state['id'])>
+                                                    {{ $state['name'] }}</option>
+                                            @endforeach
+                                        @endisset
                                     </select>
                                 </div>
                             </div>

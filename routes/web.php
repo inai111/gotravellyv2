@@ -27,11 +27,17 @@ use Maatwebsite\Excel\Facades\Excel;
 
 Route::get('/',[CobaController::class,'index'])->name('user');
 Route::get('/cities/{id}',[CobaController::class,'detailcity']);
+Route::get('/logout',function(){
+    session()->flush();
+    return redirect()->to(route('login'));
+});
 
 Route::group(['prefix'=>'login'],function(){
     Route::get('/',[AuthController::class,'index'])->name('login');
     Route::post('/',[AuthController::class,'login']);
 });
+
+
 Route::group(['prefix'=>'register'],function(){
     Route::get('/',[AuthController::class,'register']);
     Route::post('/',[AuthController::class,'registering']);
@@ -46,6 +52,7 @@ Route::delete('/excel', function (Request $request) {
 Route::prefix('collections')->group(function(){
     Route::get('/states',[CollectionController::class,'getstates']);
     Route::get('/continents',[CollectionController::class,'getcontinents']);
+    Route::get('/countries',[CollectionController::class,'getcountries']);
 });
 
 Route::get('/setup', function() {
