@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\V1\CountryCollection;
+use App\Http\Resources\V1\CountryResource;
+use App\Models\Continents;
+use App\Models\Countries;
 use App\Repositories\Interfaces\CityInterface;
 use App\Repositories\Interfaces\StateRepositoryInterface;
 use App\Repositories\StateRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class CobaController extends CustomController
 {
@@ -19,10 +24,16 @@ class CobaController extends CustomController
 
     public function index(Request $request)
     {
+        $paramQuery = [];
+        if($request->get('page')) $paramQuery['page'] = $request->get('page');
+        $filter = $request->get('filter')??[];
+        foreach($filter as $key=>$val){
+            if($key=='name') $paramQuery["{$key}"]['like']="%{$val}%";
+            // if($key=='countryId') $paramQuery["cities.states.countryId}"]['eq']=$val;
+            else $paramQuery["{$key}"]['eq']=$val;
+        }
         $page = $request->get('page')??1;
-        $url = url(route('v1.cities.index',[
-            'page'=>$page
-        ]));
+        $url = url(route('v1.cities.index',$paramQuery));
         
         $response = $this->requestGet($url);
         if(!isset($response['data'])) return abort(500);
@@ -33,17 +44,52 @@ class CobaController extends CustomController
         
         $dataCities = $response;
         
-        # mendapatkan states
-        $url = url(route('v1.states.index'));
-        
+        # mendapatkan  continents
+        $url = url(route('v1.continents.index'));
+
         $response = $this->requestGet($url);
         if(!isset($response['data'])) return abort(500);
+
+        $dataContinents = $response['data'];
+
+        # mendapatkan states
+        $filter = $request->get('filter');
+        $continentId = $filter['continentId']??'';
+        $countryId   = $filter['countryId']??'';
+        $stateId     = $filter['stateId']??'';
+        // $url = url("/api/v1/continents/$continentId?continents.id[eq]=$continentId&countries.id[eq]=$countryId&countries.states.id[eq]=$stateId&include=countries.states.cities");
         
-        $response = $this->paginate($response,$request);
+        // $response = $this->requestGet($url);
+        $dataOption = [];
+        if($continentId){
+            $countries = Countries::where('continent_id',$continentId);
 
-        $dataStates = $response;
-
-        return view('home.index',compact('dataCities','dataStates'));
+            if($countryId){
+                $countries = $countries->with('states',function($query) use($countryId){
+                    return $query->where('country_id',$countryId);
+                });
+                
+                // if($stateId) $countries = $countries->with('states.cities',function($query) use($stateId){
+                //     return $query->where('state_id',$stateId);
+                // });
+            }
+            $countries = $countries->get();
+            $states = [];
+            // $country = $countries->where('id',$countryId)->first();
+            if($countryId){
+                $country = $countries->where('id',$countryId)->first();
+                $states = $country->when($country['states'],function($collection,$i){
+                    return $i;
+                });
+            }
+            $dataOption = [
+                'countries'=>$countries,
+                'states'=>$states,
+            ];
+        }
+        if(!isset($response['data'])) return abort(500);
+        
+        return view('home.index',compact('dataCities','dataContinents','dataOption'));
     }
 
     public function detailcity($id)
