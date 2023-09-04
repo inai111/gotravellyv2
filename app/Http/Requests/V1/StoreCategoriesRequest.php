@@ -27,7 +27,7 @@ class StoreCategoriesRequest extends FormRequest
         return [
             'name'=>['required','unique:categories,name'],
             'active'=>[],
-            'priorityOrder'=>[]            
+            'priorityOrder'=>[]
         ];
     }
 

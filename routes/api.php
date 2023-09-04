@@ -47,6 +47,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function() {
     ]);
     Route::apiResource('countries', CountriesController::class)->names([
         'index'     =>'v1.countries.index',
+        'show'      =>'v1.countries.show',
         'store'     =>'v1.countries.store',
         'update'    =>'v1.countries.update',
         'destroy'   =>'v1.countries.destroy', 

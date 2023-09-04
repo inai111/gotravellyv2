@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\V1\ContinentCollection;
+use App\Http\Resources\V1\StateCollection;
 use App\Models\Continents;
+use App\Models\Countries;
+use App\Models\States;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -12,23 +14,18 @@ class CollectionController extends CustomController
     //
     public function getstates(Request $request)
     {
-        # mendapatkan states
-        $url = url(route('v1.states.index',[
-            'page'=>$request->get('page')??1
-        ]));
-        
-        $response = $this->requestGet($url);
-        if(!isset($response['data'])) return response()->json('',500);
+        $data = QueryBuilder::for(States::class)
+        ->allowedFilters(['countries.id'])
+        ->get();
 
-        $response = $this->paginate($response,$request);
-        // dd($response->nextPageUrl());
-        $data = $response->getCollection();
+        $data = new StateCollection($data);
 
-        $component = view('components.option',compact('data'))->render();
+        // # mendapatkan states
+
+        $component = view('components.form.select.option',compact('data'))->render();
 
         $return = [
             'view'=>$component,
-            'nextPageUrl'=>$response->nextPageUrl(),
         ];
         
         # untuk di simpan di sessionStorage
@@ -43,12 +40,59 @@ class CollectionController extends CustomController
         ]);
     }
 
-    public function getcontinents()
+    public function getcontinents(Request $request)
     {
-        $continents = QueryBuilder::for(Continents::class)
-        ->allowedFilters(['name'])
+        $data = QueryBuilder::for(Continents::class)
+        ->allowedFilters(['name','countries.name'])
         ->allowedIncludes(['countries.states'])
         ->get();
-        return new ContinentCollection($continents);
+
+        $component = view('components.form.select.option',compact('data'))->render();
+
+        $return = [
+            'view'=>$component,
+        ];
+        
+        # untuk di simpan di sessionStorage
+        $generateEtag = md5(json_encode($return));
+
+        $etag = $request->header('If-None-Match')??'';
+        if($generateEtag===$etag){
+            return response('',304);
+        }
+        return response()->json($return,200)->withHeaders([
+            'ETag'=>$generateEtag
+        ]);
+    }
+
+    public function getcountries(Request $request)
+    {
+        $data = QueryBuilder::for(Countries::class)
+        ->allowedFilters(['continents.id'])
+        ->get();
+
+        $component = view('components.form.select.option',compact('data'))->render();
+
+        $return = [
+            'view'=>$component,
+        ];
+        
+        # untuk di simpan di sessionStorage
+        $generateEtag = md5(json_encode($return));
+
+        $etag = $request->header('If-None-Match')??'';
+        if($generateEtag===$etag){
+            return response('',304);
+        }
+        return response()->json($return,200)->withHeaders([
+            'ETag'=>$generateEtag
+        ]);
+    }
+
+    public function getFirstInitOptionContinent(Request $request)
+    {
+        $continentId = $request->get('continentId');
+        $data = QueryBuilder::for(Continents::class)
+        ->allowedIncludes(['countries','states','cities']);
     }
 }

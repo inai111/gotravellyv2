@@ -20,16 +20,10 @@ class AuthController extends CustomController
 
     public function login(AuthLoginRequest $request)
     {
-        $url = url(route('v1.login'));
-        $response = $this->requestPost($url,$request->all());
-        if($response->ok()){
-            $data = $response->json();
-
-            # simpan token di session
-            $token = $data['token'];
-            $request->session()->put('authToken',$token);
-            $request->session()->put('user',$data['data']);
-            return redirect(route('user'));
+        if(auth()->attempt($request->only(['email','password']))){
+            $token = auth()->user()->createToken('ehe',['create','read'])->plainTextToken;
+            $cookie = cookie('token-access',$token);
+            return redirect('/')->withCookie($cookie);
         }
     }
 

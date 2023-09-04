@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Http;
@@ -19,8 +18,8 @@ class CustomController extends Controller
     {
         # buat key redis dari url request
         $keyRedis = md5($url);
-        $token = session()->get('authToken');
         $etag = '';
+        $token = request()->cookie('token-access');
 
         if (Redis::cekKoneksiServer()) {
             # mendapatkan etag yang tersimpan dalam redis
@@ -66,16 +65,37 @@ class CustomController extends Controller
      */
     protected function requestPost(string $url,array $data)
     {
+        $token = request()->cookie('token-access')??'';
         $json = json_encode($data);
 
         #melakukan request data cities
         $getData = Http::withHeaders([
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
-        ])->withBody($json)->post($url);
+        ])->withBody($json)->withToken($token)->post($url);
 
         return $getData;
-    } 
+    }
+
+    /**
+     * function untuk melakukan request POST
+     * @param String $url url lengkap dari api, post tidak memiliki parameter
+     * @param Array $data isi dari form yang akan di kirimkan ke api
+     * @return Object setting kembalian melalui controller masing masing
+     */
+    protected function requestPut(string $url,array $data)
+    {
+        $token = request()->cookie('token-access')??'';
+        $json = json_encode($data);
+
+        #melakukan request data cities
+        $getData = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ])->withBody($json)->withToken($token)->put($url);
+
+        return $getData;
+    }
 
     /**
      * @param Array $response kembalian dari request getAll yang isinya [data=>[], meta=>[], links=>[]]

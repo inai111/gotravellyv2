@@ -1,16 +1,18 @@
-@php
-    // dd($city)
-@endphp
-@extends('layouts.html');
+@extends('layouts.html')
 
 @section('content')
     <div class="mb-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">{{ $continent['attributes']['name'] }}</a></li>
-                <li class="breadcrumb-item"><a href="#">{{ $country['attributes']['name'] }}</a>
+                <li class="breadcrumb-item">
+                    <a href="/continent/{{$continent['id']}}">{{ $continent['attributes']['name'] }}</a>
                 </li>
-                <li class="breadcrumb-item"><a href="#">{{ $state['attributes']['name'] }}</a></li>
+                <li class="breadcrumb-item">
+                    <a href="/country/{{$country['id']}}">{{ $country['attributes']['name'] }}</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="/state/{{$state['id']}}">{{ $state['attributes']['name'] }}</a>
+                </li>
                 <li class="breadcrumb-item active" aria-current="page">{{ $city['attributes']['name'] }}</li>
             </ol>
         </nav>

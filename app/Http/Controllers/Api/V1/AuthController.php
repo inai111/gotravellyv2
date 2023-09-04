@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthLoginRequest;
 use App\Traits\HttpResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class AuthController extends Controller
 {
@@ -22,9 +24,10 @@ class AuthController extends Controller
         $user = Auth::user();
         $token = $user->createToken('basic-token',['create','read','update','delete'])->plainTextToken;
         $token = explode('|',$token);
-        return response()->json([
-            'data'=>$user,
-            'token'=>$token[1]
-        ]);
+        $response = Response::make(['user'=>$user,'token'=>$token[1]]);
+        $response->headers->setCookie(
+            new Cookie('token',$token[1],0,'/',"",false,true,false,'Lax')
+        );
+        return $response;
     }
 }
