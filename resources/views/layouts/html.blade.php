@@ -17,6 +17,13 @@
 
 <body>
     @include('partials.navbar')
+    <x-toast-container>
+        @if(session('message'))
+        <x-toast-default>
+            {{session('message')}}
+        </x-toast-default>
+        @endif
+    </x-toast-container>
     <div class="container-md">
         @yield('content')
     </div>

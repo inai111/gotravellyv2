@@ -78,7 +78,7 @@ class CustomController extends Controller
     }
 
     /**
-     * function untuk melakukan request POST
+     * function untuk melakukan request PUT
      * @param String $url url lengkap dari api, post tidak memiliki parameter
      * @param Array $data isi dari form yang akan di kirimkan ke api
      * @return Object setting kembalian melalui controller masing masing
@@ -93,6 +93,26 @@ class CustomController extends Controller
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
         ])->withBody($json)->withToken($token)->put($url);
+
+        return $getData;
+    }
+
+    /**
+     * function untuk melakukan request DELETE
+     * @param String $url url lengkap dari api, post tidak memiliki parameter
+     * @param Array $data isi dari form yang akan di kirimkan ke api
+     * @return Object setting kembalian melalui controller masing masing
+     */
+    protected function requestDelete(string $url,array $data = [])
+    {
+        $token = request()->cookie('token-access')??'';
+        $json = json_encode($data);
+
+        #melakukan request data cities
+        $getData = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ])->withBody($json)->withToken($token)->delete($url);
 
         return $getData;
     }

@@ -56,7 +56,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function() {
         'index'     =>'v1.states.index',
         'store'     =>'v1.states.store',
         'update'    =>'v1.states.update',
-        'destroy'   =>'v1.states.destroy',    
+        'destroy'   =>'v1.states.destroy',
     ]);
     Route::apiResource('cities', CitiesController::class)->names([
         'index'     =>'v1.cities.index',

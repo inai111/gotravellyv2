@@ -168,6 +168,18 @@ class CobaController extends CustomController
         return redirect()->back()->with('message',$message)->withErrors($errors);
     }
 
+    public function deletestate(States $state)
+    {
+        $response = $this->requestDelete(route('v1.states.destroy',['state'=>$state->id]));
+        $responseData = $response->json();
+        if($response->ok()){
+            $message = "state data successfully deleted!";
+            return redirect()->back()->with('message',$message);
+        }
+        $message = $responseData['message'];
+        return redirect()->back()->with('message',$message);
+}
+
     public function detailcountry($id)
     {
         $response = $this->requestGet(route('v1.countries.show',['country'=>$id,'include'=>'continents,states']));

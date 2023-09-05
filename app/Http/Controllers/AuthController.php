@@ -15,16 +15,25 @@ class AuthController extends CustomController
     }
     public function index()
     {
+        // $token = request()->cookie('token-access')??'';
+        // if($token){
+        //     return redirect(route('logintoken'))->withCookie('auth',$token);
+        // }
         return view("auth.index");
     }
 
     public function login(AuthLoginRequest $request)
     {
         if(auth()->attempt($request->only(['email','password']))){
-            $token = auth()->user()->createToken('ehe',['create','read'])->plainTextToken;
-            $cookie = cookie('token-access',$token);
+            $token = auth()->user()->createToken('ehe',['create','read','update','delete'])->plainTextToken;
+            $cookie = cookie('token-access',$token,0,null,null,false);
             return redirect('/')->withCookie($cookie);
         }
+    }
+
+    public function logintoken()
+    {
+        dd(auth()->user());
     }
 
     public function register()
